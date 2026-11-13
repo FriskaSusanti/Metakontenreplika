@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FRISKA</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fff;
+      color: #202124;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 15px;
+      padding: 6px 16px;
+      height: 60px;
+      font-size: 13px;
+    }
+    header a:hover { text-decoration: underline; }
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      cursor: pointer;
+    }
+    .icon-btn:hover { background: rgba(60,64,67,.08); }
+    .signin {
+      background: #1a73e8;
+      color: #fff;
+      padding: 9px 23px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .signin:hover { background: #1b66c9; text-decoration: none !important; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+
+    /* Main */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px;
+      margin-top: 110px;
+    }
+    .logo {
+      font-family: "Product Sans", "Google Sans", Arial, sans-serif;
+      font-size: 92px;
+      font-weight: 500;
+      letter-spacing: -1px;
+      user-select: none;
+      margin-bottom: 26px;
+    }
+    .b { color: #4285f4; } .r { color: #ea4335; }
+    .y { color: #fbbc05; } .g { color: #34a853; }
+
+    .search-wrap { width: 100%; max-width: 584px; position: relative; }
+    .search-box {
+      display: flex;
+      align-items: center;
+      height: 46px;
+      border: 1px solid #dfe1e5;
+      border-radius: 24px;
+      padding: 0 14px;
+      gap: 12px;
+      background: #fff;
+    }
+    .search-box:hover, .search-box:focus-within {
+      box-shadow: 0 1px 6px rgba(32,33,36,.28);
+      border-color: rgba(223,225,229,0);
+    }
+    .search-box.open {
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 1px 6px rgba(32,33,36,.28);
+      border-color: transparent;
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      height: 100%;
+      background: transparent;
+    }
+    .search-box svg { flex-shrink: 0; }
+    .clear { display: none; cursor: pointer; }
+    .divider { width: 1px; height: 65%; background: #dfe1e5; display: none; }
+
+    .suggestions {
+      display: none;
+      position: absolute;
+      left: 0; right: 0; top: 46px;
+      background: #fff;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 4px 6px rgba(32,33,36,.28);
+      padding: 4px 0 16px;
+      z-index: 10;
+    }
+    .suggestions.show { display: block; }
+    .suggestions .sep { height: 1px; background: #e8eaed; margin: 0 14px 6px; }
+    .suggestions li {
+      list-style: none;
+      display: flex; align-items: center; gap: 14px;
+      padding: 7px 18px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .suggestions li:hover, .suggestions li.active { background: #f1f3f4; }
+
+    .buttons { margin-top: 29px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .buttons button {
+      background: #f8f9fa;
+      border: 1px solid #f8f9fa;
+      border-radius: 4px;
+      color: #3c4043;
+      font-size: 14px;
+      padding: 0 16px;
+      height: 36px;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      border-color: #dadce0;
+      box-shadow: 0 1px 1px rgba(0,0,0,.1);
+      color: #202124;
+    }
+    .lang { margin-top: 28px; font-size: 13px; color: #4d5156; }
+    .lang a { color: #1a0dab; margin: 0 4px; }
+    .lang a:hover { text-decoration: underline; }
+
+    /* Google Workspace */
+    .workspace { width: 100%; max-width: 584px; margin: 40px 0 48px; text-align: center; }
+    .workspace h2 { font-size: 16px; font-weight: normal; color: #5f6368; margin-bottom: 16px; }
+    .apps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+    .app {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 12px 4px; border-radius: 8px; font-size: 13px; color: #3c4043;
+    }
+    .app:hover { background: #f1f3f4; }
+    .app svg { width: 48px; height: 48px; }
+
+    /* Footer */
+    footer { background: #f2f2f2; font-size: 15px; color: #70757a; }
+    .footer-top { padding: 15px 30px; border-bottom: 1px solid #dadce0; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; flex-wrap: wrap;
+      padding: 0 20px;
+    }
+    .footer-bottom div { display: flex; flex-wrap: wrap; }
+    .footer-bottom a { padding: 15px; }
+    .footer-bottom a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      main { margin-top: 60px; }
+      .logo { font-size: 60px; letter-spacing: -1px; }
+      .footer-bottom { justify-content: center; }
+      header .hide-sm { display: none; }
+      .apps { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="https://mail.google.com" class="hide-sm">Gmail</a>
+    <a href="https://www.google.com/imghp" class="hide-sm">Gambar</a>
+    <div class="icon-btn" title="Aplikasi Google">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#5f6368">
+        <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"/>
+      </svg>
+    </div>
+    <a href="#" class="signin">Login</a>
+  </header>
+
+  <main>
+    <div class="logo" aria-label="FRISKA">
+      <span class="b">F</span><span class="r">R</span><span class="y">I</span><span class="b">S</span><span class="g">K</span><span class="r">A</span>
+    </div>
+
+    <form id="searchForm" class="search-wrap" action="https://www.google.com/search" method="GET" autocomplete="off">
+      <div class="search-box" id="box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#9aa0a6">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input type="text" name="q" id="q" aria-label="Telusuri" title="Telusuri" autofocus />
+        <svg class="clear" id="clear" width="24" height="24" viewBox="0 0 24 24" fill="#70757a">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+        <span class="divider" id="divider"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" title="Penelusuran suara" style="cursor:pointer">
+          <path fill="#4285f4" d="M12 15c1.66 0 3-1.31 3-2.97V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6.03C9 13.69 10.34 15 12 15z"/>
+          <path fill="#34a853" d="M11 18.08h2V21h-2z"/>
+          <path fill="#fbbc05" d="M7.05 16.87c-1.27-1.33-2.05-2.83-2.05-4.87h2c0 1.45.56 2.42 1.47 3.38v.32l-1.15 1.18z"/>
+          <path fill="#ea4335" d="M12 16.93a4.97 5.25 0 0 1-3.54-1.55l-1.41 1.49c1.26 1.34 3.02 2.13 4.95 2.13 3.87 0 6.99-2.92 6.99-7h-1.99c0 2.92-2.24 4.93-5 4.93z"/>
+        </svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" title="Telusuri dengan gambar" style="cursor:pointer">
+          <path fill="#4285f4" d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+          <path fill="#ea4335" d="M5 8V6.5C5 5.67 5.67 5 6.5 5H8V3H6.5A3.5 3.5 0 0 0 3 6.5V8h2z"/>
+          <path fill="#fbbc05" d="M5 16H3v1.5A3.5 3.5 0 0 0 6.5 21H8v-2H6.5c-.83 0-1.5-.67-1.5-1.5V16z"/>
+          <path fill="#34a853" d="M19 16v1.5c0 .83-.67 1.5-1.5 1.5H16v2h1.5a3.5 3.5 0 0 0 3.5-3.5V16h-2z"/>
+          <path fill="#4285f4" d="M17.5 3H16v2h1.5c.83 0 1.5.67 1.5 1.5V8h2V6.5A3.5 3.5 0 0 0 17.5 3z"/>
+        </svg>
+      </div>
+
+      <ul class="suggestions" id="suggestions"></ul>
+
+      <div class="buttons">
+        <button type="submit">Google Search</button>
+        <button type="button" id="lucky">Saya Lagi Beruntung</button>
+      </div>
+    </form>
+
+    <div class="lang">
+      Google tersedia dalam:
+      <a href="#">English</a><a href="#">Basa Bali</a><a href="#">Basa Jawa</a><a href="#">Basa Sunda</a>
+    </div>
+
+    <section class="workspace">
+      <h2>Google Workspace</h2>
+      <div class="apps">
+        <!-- Drive -->
+        <a class="app" href="https://drive.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M16 6L3 29l7 12 13-23z" fill="#00ac47"/>
+            <path d="M16 6h16l13 23H29z" fill="#ffba00"/>
+            <path d="M10 41h28l7-12H17z" fill="#2684fc"/>
+          </svg>Drive</a>
+        <!-- Docs -->
+        <a class="app" href="https://docs.google.com/document" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z" fill="#4285f4"/>
+            <path d="M29 4v10h10z" fill="#a1c2fa"/>
+            <g fill="#fff"><rect x="15" y="21" width="18" height="2.5"/><rect x="15" y="26" width="18" height="2.5"/><rect x="15" y="31" width="18" height="2.5"/><rect x="15" y="36" width="12" height="2.5"/></g>
+          </svg>Docs</a>
+        <!-- Sheets -->
+        <a class="app" href="https://docs.google.com/spreadsheets" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z" fill="#0f9d58"/>
+            <path d="M29 4v10h10z" fill="#87ceac"/>
+            <rect x="15" y="21" width="18" height="15" fill="#fff"/>
+            <g fill="#0f9d58"><rect x="22" y="21" width="1.6" height="15"/><rect x="15" y="25.5" width="18" height="1.6"/><rect x="15" y="30.5" width="18" height="1.6"/></g>
+          </svg>Sheets</a>
+        <!-- Slides -->
+        <a class="app" href="https://docs.google.com/presentation" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z" fill="#f4b400"/>
+            <path d="M29 4v10h10z" fill="#fadb80"/>
+            <rect x="15" y="22" width="18" height="13" rx="1" fill="#fff"/>
+            <rect x="17.5" y="24.5" width="13" height="8" fill="#f4b400"/>
+          </svg>Slides</a>
+        <!-- Forms -->
+        <a class="app" href="https://docs.google.com/forms" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z" fill="#7248b9"/>
+            <path d="M29 4v10h10z" fill="#b9a3dc"/>
+            <g fill="#fff"><circle cx="17" cy="23" r="1.7"/><circle cx="17" cy="29" r="1.7"/><circle cx="17" cy="35" r="1.7"/>
+              <rect x="21" y="22" width="12" height="2.2"/><rect x="21" y="28" width="12" height="2.2"/><rect x="21" y="34" width="12" height="2.2"/></g>
+          </svg>Forms</a>
+        <!-- Gmail -->
+        <a class="app" href="https://mail.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M6 16v20a2 2 0 0 0 2 2h6V21z" fill="#4285f4"/>
+            <path d="M42 16v20a2 2 0 0 1-2 2h-6V21z" fill="#34a853"/>
+            <path d="M14 14.5V21l10 7.5L34 21v-6.5l-10 7.5z" fill="#ea4335"/>
+            <path d="M6 13v3l8 5v-6.5l-3.2-2.4A3 3 0 0 0 6 13z" fill="#c5221f"/>
+            <path d="M34 14.5V21l8-5v-3a3 3 0 0 0-4.8-2.4z" fill="#fbbc04"/>
+          </svg>Gmail</a>
+        <!-- Calendar -->
+        <a class="app" href="https://calendar.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <rect x="7" y="7" width="34" height="34" rx="4" fill="#fff" stroke="#1a73e8" stroke-width="2.5"/>
+            <path d="M7 11a4 4 0 0 1 4-4h26a4 4 0 0 1 4 4v4H7z" fill="#1a73e8"/>
+            <text x="24" y="35" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="15" fill="#1a73e8">31</text>
+          </svg>Calendar</a>
+        <!-- Meet -->
+        <a class="app" href="https://meet.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M9 13h18a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V16a3 3 0 0 1 3-3z" fill="#00ac47"/>
+            <path d="M6 16a3 3 0 0 1 3-3h4v9H6z" fill="#2684fc"/>
+            <path d="M6 26h7v9H9a3 3 0 0 1-3-3z" fill="#0066da"/>
+            <path d="M30 21l11-7.5v21L30 27z" fill="#00832d"/>
+            <path d="M13 13h14a3 3 0 0 1 3 3v2H13z" fill="#ffba00"/>
+          </svg>Meet</a>
+        <!-- Chat -->
+        <a class="app" href="https://chat.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M8 7h32a3 3 0 0 1 3 3v22a3 3 0 0 1-3 3H18l-8 7v-7H8a3 3 0 0 1-3-3V10a3 3 0 0 1 3-3z" fill="#00ac47"/>
+            <g fill="#fff"><rect x="13" y="16" width="22" height="3" rx="1.5"/><rect x="13" y="23" width="15" height="3" rx="1.5"/></g>
+          </svg>Chat</a>
+        <!-- Sites -->
+        <a class="app" href="https://sites.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <path d="M29 4H12a3 3 0 0 0-3 3v34a3 3 0 0 0 3 3h24a3 3 0 0 0 3-3V14z" fill="#3f51b5"/>
+            <path d="M29 4v10h10z" fill="#9fa8da"/>
+            <g fill="#fff"><rect x="15" y="20" width="18" height="3.5"/><rect x="15" y="26" width="7" height="10"/><rect x="24.5" y="26" width="8.5" height="10"/></g>
+          </svg>Sites</a>
+        <!-- Gemini -->
+        <a class="app" href="https://gemini.google.com" target="_blank">
+          <svg viewBox="0 0 48 48">
+            <defs><linearGradient id="gem" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#4285f4"/><stop offset=".6" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/>
+            </linearGradient></defs>
+            <path d="M24 4C24 15 33 24 44 24 33 24 24 33 24 44 24 33 15 24 4 24 15 24 24 15 24 4z" fill="url(#gem)"/>
+          </svg>Gemini</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-top">Indonesia</div>
+    <div class="footer-bottom">
+      <div>
+        <a href="#">Tentang</a>
+        <a href="#">Periklanan</a>
+        <a href="#">Bisnis</a>
+        <a href="#">Cara kerja Penelusuran</a>
+      </div>
+      <div>
+        <a href="#">Privasi</a>
+        <a href="#">Persyaratan</a>
+        <a href="#">Setelan</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('q');
+    const box = document.getElementById('box');
+    const clearBtn = document.getElementById('clear');
+    const divider = document.getElementById('divider');
+    const list = document.getElementById('suggestions');
+    const lucky = document.getElementById('lucky');
+
+    // Contoh daftar saran (simulasi autocomplete)
+    const samples = [
+      'cuaca hari ini', 'cara membuat website', 'artificial intelligence adalah',
+      'berita terkini', 'kurs dollar hari ini', 'resep nasi goreng',
+      'jadwal sholat', 'terjemahan inggris indonesia', 'machine learning untuk pemula',
+      'meta adalah', 'chatgpt vs claude', 'tugas kuliah ai', 'python tutorial',
+      'universitas terbaik di indonesia', 'google maps'
+    ];
+    let activeIndex = -1;
+    let current = [];
+
+    const searchIcon = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>';
+
+    function render() {
+      const val = input.value.trim().toLowerCase();
+      clearBtn.style.display = divider.style.display = input.value ? 'block' : 'none';
+      current = val ? samples.filter(s => s.includes(val)).slice(0, 8) : [];
+      activeIndex = -1;
+      if (!current.length) { close(); return; }
+      list.innerHTML = '<div class="sep"></div>' + current.map((s, i) => {
+        const idx = s.indexOf(val);
+        const html = s.slice(0, idx) + s.slice(idx, idx + val.length) + '<b>' + s.slice(idx + val.length) + '</b>';
+        return `<li data-i="${i}">${searchIcon}<span>${html}</span></li>`;
+      }).join('');
+      list.classList.add('show');
+      box.classList.add('open');
+    }
+    function close() { list.classList.remove('show'); box.classList.remove('open'); }
+    function go(q) { input.value = q; form.submit(); }
+
+    input.addEventListener('input', render);
+    input.addEventListener('focus', render);
+    input.addEventListener('keydown', e => {
+      const items = list.querySelectorAll('li');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = (activeIndex + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+        items.forEach((li, i) => li.classList.toggle('active', i === activeIndex));
+        input.value = current[activeIndex];
+      } else if (e.key === 'Escape') close();
+    });
+    list.addEventListener('mousedown', e => {
+      const li = e.target.closest('li');
+      if (li) go(current[li.dataset.i]);
+    });
+    document.addEventListener('click', e => { if (!form.contains(e.target)) close(); });
+    clearBtn.addEventListener('click', () => { input.value = ''; input.focus(); render(); });
+
+    form.addEventListener('submit', e => {
+      if (!input.value.trim()) e.preventDefault();
+    });
+    lucky.addEventListener('click', () => {
+      const q = input.value.trim();
+      if (!q) { window.open('https://doodles.google/', '_self'); return; }
+      window.location.href = 'https://www.google.com/search?btnI=1&q=' + encodeURIComponent(q);
+    });
+  </script>
+</body>
+</html>
